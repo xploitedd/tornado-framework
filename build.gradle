@@ -29,5 +29,5 @@ jar {
     from configurations.compile
             .findAll { !it.name.endsWith("pom") }
             .collect { it.isDirectory() ? it : zipTree(it) }
-    manifest { attributes 'Main-Class': 'me.xploited.tornado.TornadoKt' }
+    //manifest { attributes 'Main-Class': 'me.xploited.tornado.TornadoKt' }
 }

@@ -7,7 +7,6 @@ import me.xploited.tornado.handlers.*
 import me.xploited.tornado.handlers.Commands
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
-import java.io.File
 
 val config = ConfigurationHandler.readConfig("config", Configuration::class.java)
 class Tornado {
@@ -21,8 +20,4 @@ class Tornado {
     }
 
     fun registerCommand(executor: CommandExecutor) = Commands.registerCommand(executor)
-}
-
-fun main() {
-    val tornado = Tornado()
 }
