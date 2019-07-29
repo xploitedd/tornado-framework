@@ -1,5 +1,6 @@
 package me.xploited.tornado.handlers
 
+import me.xploited.tornado.config
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
@@ -10,7 +11,6 @@ import kotlin.reflect.full.findAnnotation
 @Target(AnnotationTarget.CLASS)
 annotation class Command(
     val name: String,
-    val usage: String = "",
     val description: String = "",
     val minArgs: Int = 0,
     val guildOnly: Boolean = false,
@@ -21,8 +21,7 @@ annotation class Command(
 
 interface CommandExecutor { fun execute(args: Array<String>?, message: Message) }
 
-// TODO: load prefix from the config file
-private const val PREFIX = "!"
+private val PREFIX = config.prefix
 internal object Commands : ListenerAdapter() {
     // store the command and the information about the command
     // it needs this because the permissions (along with other things) are specified by the Command annotation
@@ -76,7 +75,7 @@ internal object Commands : ListenerAdapter() {
             val args = pair.second
             val minArgs = commandInfo.minArgs
             if (minArgs > 0 && minArgs > args?.size ?: 0) {
-                channel.sendMessage("The command requires at least $minArgs argument(s)\nUsage: ${commandInfo.usage}").queue()
+                channel.sendMessage("The command requires at least $minArgs argument(s)\nUsage: $PREFIX$commandName args...").queue()
                 return
             }
 

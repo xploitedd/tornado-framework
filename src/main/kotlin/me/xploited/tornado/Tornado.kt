@@ -9,14 +9,13 @@ import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import java.io.File
 
-class Tornado() {
-    val bot: JDA
+val config = ConfigurationHandler.readConfig("config", Configuration::class.java)
+class Tornado {
+    val bot: JDA = JDABuilder(config.discordToken).build()
     private val playerManager: AudioPlayerManager = DefaultAudioPlayerManager()
 
     init {
         // load default config
-        val config = ConfigurationHandler.readConfig("config", Configuration::class.java)
-        bot = JDABuilder(config.discordToken).build()
         bot.addEventListener(Commands)
         AudioSourceManagers.registerRemoteSources(playerManager)
     }

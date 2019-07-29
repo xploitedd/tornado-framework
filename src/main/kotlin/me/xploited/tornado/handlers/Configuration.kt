@@ -29,5 +29,6 @@ object ConfigurationHandler {
 
 data class Configuration(
     // configuration defaults
+    val prefix: String = ">",
     val discordToken: String = "Insert Your Token Here"
 )
