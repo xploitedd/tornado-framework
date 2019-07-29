@@ -50,6 +50,8 @@ internal object Commands : ListenerAdapter() {
             }
 
             val (commandInfo, commandExecutor) = commands[commandName]!!
+            // first let's check if the command requires a guild or a voice channel
+            // if it requires one of those things then it must come from a guild
             if (!event.isFromGuild && (commandInfo.guildOnly || commandInfo.requireVoice)) {
                 channel.sendMessage("This command must be executed from inside a guild!").queue()
                 return
@@ -57,7 +59,7 @@ internal object Commands : ListenerAdapter() {
 
             val member = event.member
             if (member != null) {
-                // guild checks (permissions and voice channel)
+                // check if the guild member has the sufficient permissions to execute this command
                 val permissions = commandInfo.permissions.filter { !member.hasPermission(it) }
                 if (permissions.isNotEmpty()) {
                     channel.sendMessage("You don't have enough permissions to execute this command!\n" +
@@ -65,6 +67,7 @@ internal object Commands : ListenerAdapter() {
                     return
                 }
 
+                // if the command requires a voice channel checks if the member is inside a voice channel
                 if (commandInfo.requireVoice && (member.voiceState == null || !member.voiceState!!.inVoiceChannel())) {
                     channel.sendMessage("This command requires you to be in a voice channel.\n" +
                             "Please join one or check if voice is enabled!").queue()
@@ -72,6 +75,7 @@ internal object Commands : ListenerAdapter() {
                 }
             }
 
+            // check if it has the necessary arguments to proceed
             val args = pair.second
             val minArgs = commandInfo.minArgs
             if (minArgs > 0 && minArgs > args?.size ?: 0) {

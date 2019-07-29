@@ -19,6 +19,7 @@ object ConfigurationHandler {
             return FileReader(file).use { gson.fromJson(it, clazz) }
 
         // save a new configuration
+        // let the method throw if it does not have a parameter-less constructor
         val config = clazz.getConstructor().newInstance()
         saveToFile(fileName, config)
         return config
@@ -27,6 +28,8 @@ object ConfigurationHandler {
     fun <T> saveToFile(fileName: String, obj: T) = FileWriter("$fileName.json").use { it.write(gson.toJson(obj)) }
 }
 
+// every configuration data class must have a parameter-less constructor
+// in this case we use a constructor with parameters that have default values
 data class Configuration(
     // configuration defaults
     val prefix: String = ">",
